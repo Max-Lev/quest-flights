@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 import { timer } from 'rxjs/internal/observable/timer';
 import { EmployeeFlightsContainer } from '../models/employee-flights-container.model';
 import { GetFlightsService } from '../services/get-flights.service';
@@ -12,21 +12,31 @@ import { GetFlightsService } from '../services/get-flights.service';
 })
 export class FlightsDashboardContainerComponent implements OnInit, AfterViewInit {
 
-  employeeFlightsModel: EmployeeFlightsContainer = new Object() as EmployeeFlightsContainer;
+  employeeFlightsModel: EmployeeFlightsContainer = new EmployeeFlightsContainer([]);
 
   constructor(private changeDetector: ChangeDetectorRef,
+    private activatedRoute: ActivatedRoute,
     private getFlightsService: GetFlightsService) {
 
   }
 
   ngOnInit(): void {
-
+    this.employeeFlightsModel = { ...this.activatedRoute.snapshot.data.flightsResolver } as EmployeeFlightsContainer;
+    console.log(this.employeeFlightsModel);
+    this.changeDetector.detectChanges();
   };
 
   ngAfterViewInit(): void {
 
+    this.pullFlights();
+
+  };
+
+  pullFlights() {
+
     const time = timer(0, 1 * 60 * 100);
-    time.subscribe(t => {
+
+    time.subscribe((tm: number) => {
       this.getViewModel$();
     });
 
@@ -37,7 +47,7 @@ export class FlightsDashboardContainerComponent implements OnInit, AfterViewInit
 
     this.getFlightsService.getDashboardFlights().subscribe((data: EmployeeFlightsContainer) => {
 
-      this.employeeFlightsModel = Object.assign(this.employeeFlightsModel, { ...data });
+      this.employeeFlightsModel = { ...data } as EmployeeFlightsContainer;
 
       this.changeDetector.detectChanges();
 

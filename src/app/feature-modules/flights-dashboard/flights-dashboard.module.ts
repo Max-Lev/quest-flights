@@ -4,21 +4,23 @@ import { FlightsDashboardContainerComponent } from './flights-dashboard-containe
 import { RouterModule, Routes } from '@angular/router';
 import { EmployeesModule } from '../employees/employees.module';
 import { FlightsInfoModule } from '../flights-info/flights-info.module';
-import { FlightInformationComponent } from './components/flight-information/flight-information.component';
 import { HttpClientModule } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { GetFlightsService } from './services/get-flights.service';
+import { FlightsResolver } from './resolvers/flights.service';
 
 const routes: Routes = [
   {
-    path: '', component: FlightsDashboardContainerComponent
+    path: '', component: FlightsDashboardContainerComponent,
+    resolve: {
+      flightsResolver: FlightsResolver
+    }
   }
 ];
 
 @NgModule({
   declarations: [
-    FlightsDashboardContainerComponent,
-    FlightInformationComponent
+    FlightsDashboardContainerComponent
   ],
   imports: [
     CommonModule,
@@ -28,7 +30,8 @@ const routes: Routes = [
     HttpClientModule
   ],
   providers: [
-    GetFlightsService
+    GetFlightsService,
+    FlightsResolver
   ]
 })
 export class FlightsDashboardModule {

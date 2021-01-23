@@ -16,3 +16,13 @@ $border:1px solid rgb(207, 187, 187);
         }
     }
 }
+
+:host {
+    .title {
+        display: flex;
+        padding: 2.65rem 0;
+        flex-direction: column;
+        background-color: lightblue;
+        align-items: center;
+    }
+}

@@ -9,15 +9,17 @@ import { EmployeeFlightsContainer } from '../../flights-dashboard/models/employe
 })
 export class EmployeesContainerComponent implements OnInit, OnChanges {
 
-  @Input() employeeFlightsModel?: EmployeeFlightsContainer;// = new Object() as EmployeeFlightsContainer;
+  @Input() employeeFlightsModel?: EmployeeFlightsContainer;
+
+  @Input() titleVisibility: 'visibile';
   
+
   constructor() {
 
   };
 
   ngOnChanges(changes: SimpleChanges): void {
-    // console.log('employeeFlightsModel:', this.employeeFlightsModel);
-    // console.log(changes);
+
   }
 
   ngOnInit(): void {

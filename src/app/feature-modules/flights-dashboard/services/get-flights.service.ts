@@ -46,9 +46,7 @@ export class GetFlightsService {
 
       getFlightsDashboard$.next(this.employeeFlightsContainer);
 
-      console.log(this.employeeFlightsContainer)
-
-      return this.employeeFlightsContainer;
+      getFlightsDashboard$.complete();
 
     });
 
@@ -56,7 +54,7 @@ export class GetFlightsService {
 
   };
 
-  setEmployeesListCache(employee_flights_join_response$: [IEmployeeResponseModel, IFlightResponseModel[]][]) {
+  private setEmployeesListCache(employee_flights_join_response$: [IEmployeeResponseModel, IFlightResponseModel[]][]) {
 
     employee_flights_join_response$.map(item => {
 
@@ -74,7 +72,7 @@ export class GetFlightsService {
 
   }
 
-  getEmployees(): Observable<IEmployeeResponseModel[]> {
+  private getEmployees(): Observable<IEmployeeResponseModel[]> {
 
     if (this.employeeFlightsContainer.allEmloyees.length) {
       return of(this.employeeFlightsContainer.allEmloyees);
@@ -84,7 +82,7 @@ export class GetFlightsService {
 
   };
 
-  getEmployeeFlights(employeesResponse: IEmployeeResponseModel): Observable<IFlightResponseModel[]> {
+  private getEmployeeFlights(employeesResponse: IEmployeeResponseModel): Observable<IFlightResponseModel[]> {
 
     return this.httpClient.get(`${environment.workers}${employeesResponse.id}`) as Observable<IFlightResponseModel[]>;
 

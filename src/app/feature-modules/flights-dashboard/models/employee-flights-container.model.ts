@@ -93,8 +93,6 @@ export class EmployeeFlightsContainer {
             this.setAllFlights(item);
 
         });
-
-        console.log(this.employeeFlightsList);
     };
 
     private setAllFlights(item: [IEmployeeResponseModel, IFlightResponseModel[]]) {
