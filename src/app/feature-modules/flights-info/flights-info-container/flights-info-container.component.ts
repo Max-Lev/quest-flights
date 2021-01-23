@@ -9,9 +9,9 @@ export interface TableViewModel {
   destinationDate: string;
 }
 
-const ELEMENT_DATA: TableViewModel[] = [
-  { origin: '1', originDate: '12/12/2021', destination: '1.0079', destinationDate: 'H' },
-];
+// const ELEMENT_DATA: TableViewModel[] = [
+//   { origin: '1', originDate: '12/12/2021', destination: '1.0079', destinationDate: 'H' },
+// ];
 
 @Component({
   selector: 'app-flights-info-container',

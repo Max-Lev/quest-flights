@@ -31,14 +31,12 @@ export class FlightViewModel implements IFlightResponseModel {
     'Destination': string
     'Destination Date': string
     constructor(model: IFlightResponseModel) {
+        Object.assign(this, model);
         this['Flight Number'] = model.num;
         this['Origin'] = model.from;
         this['Origin Date'] = model.from_date;
         this['Destination'] = model.to;
         this['Destination Date'] = model.to_date;
-
-
-
     }
 };
 
@@ -51,34 +49,56 @@ export class EmployeeFlightsResponseModel$ {
 
 };
 
+export class EmployeeFlights {
+    employeeName: string;
+    flights: FlightViewModel[];
+    constructor(model: EmployeeFlights) {
+        this.employeeName = model.employeeName;
+        this.flights = model.flights;
+    }
+}
+
+export class EmployeeFlightsJoinListModel {
+    employeeKey: number;
+    employeeFlights: EmployeeFlights;
+    constructor(key: number, flight: EmployeeFlights) {
+        this.employeeKey = key;
+        this.employeeFlights = new EmployeeFlights(flight);
+    }
+};
+
 export class EmployeeFlightsContainer {
 
-    // employeeFlightsMap: Map<number, { flights: { employeeName: string, flights: IFlightResponseModel[] } }> = new Map();
+    allEmloyees: IEmployeeResponseModel[] = [];
 
-    employeeFlightsList: { employeeKey: number, employeeFlights: { employeeName: string, flights: FlightViewModel[] } }[] = [];
+    employeeFlightsList: EmployeeFlightsJoinListModel[] = [];
 
     allFlights: IFlightResponseModel[] = [];
 
-    constructor(info: [IEmployeeResponseModel, Array<IFlightResponseModel>][]) {
+    constructor(info: [IEmployeeResponseModel, IFlightResponseModel[]][]) {
 
-        info.map((item: [IEmployeeResponseModel, Array<IFlightResponseModel>], index: number) => {
+        info.map((item: [IEmployeeResponseModel, IFlightResponseModel[]], index: number) => {
 
-            this.employeeFlightsList.push(
-                {
-                    employeeKey: item[0].id,
-                    employeeFlights:
-                    {
-                        employeeName: item[0].name,
-                        flights: item[1].map(item => new FlightViewModel(item))
-                    }
-                });
+            this.employeeFlightsList.push
+                (
+                    new EmployeeFlightsJoinListModel(
+                        item[0].id,
+                        {
+                            employeeName: item[0].name,
+                            flights: item[1].map(item => new FlightViewModel(item))
+                        }
+                    )
+                );
 
-            item[1].map(item => this.allFlights.push(new FlightViewModel(item)));
+            this.setAllFlights(item);
 
-            // this.employeeFlightsMap.set(item[0].id, { flights: { employeeName: item[0].name, flights: item[1] } });
         });
 
-        // console.log(this.employeeFlightsList);
+        console.log(this.employeeFlightsList);
+    };
+
+    private setAllFlights(item: [IEmployeeResponseModel, IFlightResponseModel[]]) {
+        item[1].map(flight => this.allFlights.push(new FlightViewModel(flight)));
     };
 
 };

@@ -6,13 +6,17 @@ import { combineAll, flatMap, mergeMap, switchMap, timeInterval, toArray } from 
 import { from } from 'rxjs/internal/observable/from';
 import { EmployeeFlightsContainer, IEmployeeResponseModel, IFlightResponseModel } from '../models/employee-flights-container.model';
 import { Subject } from 'rxjs/internal/Subject';
-import { timer } from 'rxjs/internal/observable/timer';
-import { pipe } from 'rxjs/internal/util/pipe';
 
 @Injectable()
 export class GetFlightsService {
 
   constructor(private httpClient: HttpClient) { };
+
+  employeesList: IEmployeeResponseModel[] = [];
+
+  employeeFlightsContainer: EmployeeFlightsContainer = new EmployeeFlightsContainer([]);
+
+  private employeesCache: IEmployeeResponseModel[] = [];
 
   getDashboardFlights(): Observable<EmployeeFlightsContainer> {
 
@@ -30,40 +34,58 @@ export class GetFlightsService {
           [
             of(employee$),
             getEmployeeFlights$(employee$)
-            // interval(1 * 60 * 1000).pipe(timeInterval()).pipe(() => getEmployeeFlights$(employee$))
           ]
-        ).pipe(
-          (employee_flights_join: Observable<[IEmployeeResponseModel, IFlightResponseModel[]]>) => employee_flights_join))
+        ))
+      // .pipe((employee_flights_join: Observable<[IEmployeeResponseModel, IFlightResponseModel[]]>) => employee_flights_join))
 
-    ).pipe(
+    ).pipe(toArray()).subscribe((employee_flights_join_response$: [IEmployeeResponseModel, IFlightResponseModel[]][]) => {
 
-      toArray()
+      this.employeeFlightsContainer = new EmployeeFlightsContainer(employee_flights_join_response$);
 
-    ).subscribe((employee_flights_join_response$) => {
+      this.setEmployeesListCache(employee_flights_join_response$);
 
-      const employeeFlightsContainer = new EmployeeFlightsContainer(employee_flights_join_response$);
+      getFlightsDashboard$.next(this.employeeFlightsContainer);
 
-      getFlightsDashboard$.next(employeeFlightsContainer);
+      console.log(this.employeeFlightsContainer)
 
-      console.log(employeeFlightsContainer)
-
-      return employeeFlightsContainer;
+      return this.employeeFlightsContainer;
 
     });
 
     return getFlightsDashboard$;
 
+  };
+
+  setEmployeesListCache(employee_flights_join_response$: [IEmployeeResponseModel, IFlightResponseModel[]][]) {
+
+    employee_flights_join_response$.map(item => {
+
+      if (this.employeesCache.length !== employee_flights_join_response$.length) {
+
+        this.employeesCache.push({ id: item[0].id, name: item[0].name });
+
+        this.employeeFlightsContainer.allEmloyees = [...this.employeesCache];
+
+      }
+      else {
+        this.employeeFlightsContainer.allEmloyees = [...this.employeesCache];
+      }
+    })
+
   }
 
   getEmployees(): Observable<IEmployeeResponseModel[]> {
 
-    return this.httpClient.get<IEmployeeResponseModel[]>(environment.workers);
+    if (this.employeeFlightsContainer.allEmloyees.length) {
+      return of(this.employeeFlightsContainer.allEmloyees);
+    } else {
+      return this.httpClient.get<IEmployeeResponseModel[]>(environment.workers);
+    }
 
   };
 
   getEmployeeFlights(employeesResponse: IEmployeeResponseModel): Observable<IFlightResponseModel[]> {
-    // const time = timer(0, 1 * 60 * 1000);
-    // time.subscribe(t => {
+
     return this.httpClient.get(`${environment.workers}${employeesResponse.id}`) as Observable<IFlightResponseModel[]>;
 
   }

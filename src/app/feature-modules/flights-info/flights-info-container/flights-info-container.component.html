@@ -5,7 +5,7 @@
 
         <th mat-header-cell *matHeaderCellDef> {{column}} </th>
 
-        <td mat-cell *matCellDef="let element">
+        <td mat-cell *matCellDef="let element;let ri = index">
 
             {{element[column]}}
             <!-- {{element.employeeFlights.flights[0][column] | json}} -->

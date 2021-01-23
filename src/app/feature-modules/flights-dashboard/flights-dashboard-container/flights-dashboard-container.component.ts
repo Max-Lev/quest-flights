@@ -1,5 +1,6 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
+import { timer } from 'rxjs/internal/observable/timer';
 import { EmployeeFlightsContainer } from '../models/employee-flights-container.model';
 import { GetFlightsService } from '../services/get-flights.service';
 
@@ -23,12 +24,16 @@ export class FlightsDashboardContainerComponent implements OnInit, AfterViewInit
   };
 
   ngAfterViewInit(): void {
-    setTimeout(() => {
+
+    const time = timer(0, 1 * 60 * 100);
+    time.subscribe(t => {
       this.getViewModel$();
-    }, 1000);
+    });
+
   };
 
   getViewModel$() {
+
 
     this.getFlightsService.getDashboardFlights().subscribe((data: EmployeeFlightsContainer) => {
 
