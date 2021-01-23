@@ -2,6 +2,7 @@ import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, O
 import { ActivatedRoute } from '@angular/router';
 import { timer } from 'rxjs/internal/observable/timer';
 import { EmployeeFlightsContainer } from '../models/employee-flights-container.model';
+import { UserSelectedInfoAction } from '../models/user-selected-info.action';
 import { GetFlightsService } from '../services/get-flights.service';
 
 @Component({
@@ -14,11 +15,9 @@ export class FlightsDashboardContainerComponent implements OnInit, AfterViewInit
 
   employeeFlightsModel: EmployeeFlightsContainer = new EmployeeFlightsContainer([]);
 
-  constructor(private changeDetector: ChangeDetectorRef,
-    private activatedRoute: ActivatedRoute,
-    private getFlightsService: GetFlightsService) {
+  constructor(private changeDetector: ChangeDetectorRef, private activatedRoute: ActivatedRoute, private getFlightsService: GetFlightsService) {
 
-  }
+  };
 
   ngOnInit(): void {
     this.employeeFlightsModel = { ...this.activatedRoute.snapshot.data.flightsResolver } as EmployeeFlightsContainer;
@@ -26,9 +25,13 @@ export class FlightsDashboardContainerComponent implements OnInit, AfterViewInit
     this.changeDetector.detectChanges();
   };
 
+  userSelectedActionHandler(preference: UserSelectedInfoAction) {
+    debugger;
+  };
+
   ngAfterViewInit(): void {
 
-    this.pullFlights();
+    // this.pullFlights();
 
   };
 

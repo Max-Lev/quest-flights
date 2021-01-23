@@ -28,10 +28,12 @@ export class FlightViewModel implements IFlightResponseModel {
     'Flight Number': string;
     'Origin': string;
     'Origin Date': string;
-    'Destination': string
-    'Destination Date': string
+    'Destination': string;
+    'Destination Date': string;
+    isSelected: boolean;
     constructor(model: IFlightResponseModel) {
         Object.assign(this, model);
+        this.isSelected = false;
         this['Flight Number'] = model.num;
         this['Origin'] = model.from;
         this['Origin Date'] = model.from_date;
@@ -73,7 +75,7 @@ export class EmployeeFlightsContainer {
 
     employeeFlightsList: EmployeeFlightsJoinListModel[] = [];
 
-    allFlights: IFlightResponseModel[] = [];
+    allFlights: FlightViewModel[] = [];
 
     constructor(info: [IEmployeeResponseModel, IFlightResponseModel[]][]) {
 
