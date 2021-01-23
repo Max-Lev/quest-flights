@@ -1,3 +1,5 @@
 export const environment = {
-  production: true
+  production: true,
+  employeesAPI: 'https://interview-mock.herokuapp.com/api/workers/prod',
+  flightsAPIP: ''
 };

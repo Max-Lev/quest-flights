@@ -6,5 +6,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'quest-flights';
+
+  constructor() {
+    'Bob Dylan 2013 US Spring Tour - Mullins Center, University of Massachusetts Amherst USA 6 April 2013'
+  }
+
 }

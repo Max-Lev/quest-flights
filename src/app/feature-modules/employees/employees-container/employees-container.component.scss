@@ -1,0 +1,18 @@
+$border:1px solid rgb(207, 187, 187);
+
+:host {
+    border: 1px solid lime;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+
+    ::ng-deep {
+        mat-list-item {
+            border-top: $border;
+
+            &:last-child {
+                border-bottom: $border;
+            }
+        }
+    }
+}

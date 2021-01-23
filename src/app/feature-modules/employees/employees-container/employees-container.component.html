@@ -1,0 +1,10 @@
+<p>employees-container works!</p>
+<mat-selection-list [multiple]="false">
+
+    <mat-list-option *ngFor="let employee of employeeFlightsModel?.employeeFlightsList" [value]="employee">
+        <!-- <mat-list-option *ngFor="let employee of employeeFlightsModel?.employeeFlightsList | keyvalue" [value]="employee"> -->
+        <!-- <mat-list-option *ngFor="let employee of employeeFlightsModel?.vm" [value]="employee"> -->
+        {{employee?.employeeFlights.employeeName}}
+    </mat-list-option>
+
+</mat-selection-list>
