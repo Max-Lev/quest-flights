@@ -1,8 +1,10 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { timer } from 'rxjs/internal/observable/timer';
-import { EmployeeFlightsContainer } from '../models/employee-flights-container.model';
-import { UserSelectedInfoAction } from '../models/user-selected-info.action';
+import { CntrlActionEnum } from '../models/cntrl-action.enum';
+import { EmployeeFlightsContainer, EmployeeFlightsJoinListModel } from '../models/employee-flights-container.model';
+import { EmployeeResponseModel, FlightViewModel } from '../models/employees-flights-response.model';
+import { IUserSelectedInfoAction } from '../models/user-selected-info.action';
 import { GetFlightsService } from '../services/get-flights.service';
 
 @Component({
@@ -15,25 +17,56 @@ export class FlightsDashboardContainerComponent implements OnInit, AfterViewInit
 
   employeeFlightsModel: EmployeeFlightsContainer = new EmployeeFlightsContainer([]);
 
-  constructor(private changeDetector: ChangeDetectorRef, private activatedRoute: ActivatedRoute, private getFlightsService: GetFlightsService) {
+  userSelectedInfoAction: IUserSelectedInfoAction;
 
-  };
+  constructor(private changeDetector: ChangeDetectorRef, private activatedRoute: ActivatedRoute,
+    private getFlightsService: GetFlightsService) {
+
+  }
 
   ngOnInit(): void {
-    this.employeeFlightsModel = { ...this.activatedRoute.snapshot.data.flightsResolver } as EmployeeFlightsContainer;
-    console.log(this.employeeFlightsModel);
-    this.changeDetector.detectChanges();
-  };
-
-  userSelectedActionHandler(preference: UserSelectedInfoAction) {
-    debugger;
-  };
+    this.getResolverData();
+  }
 
   ngAfterViewInit(): void {
+    this.pullFlights();
+  }
 
-    // this.pullFlights();
 
-  };
+  getResolverData() {
+
+    this.employeeFlightsModel = { ...this.activatedRoute.snapshot.data.flightsResolver } as EmployeeFlightsContainer;
+
+    this.setDefaultInfo();
+
+    this.changeDetector.detectChanges();
+  }
+
+  setDefaultInfo() {
+
+    this.userSelectedInfoAction = { cntrl: CntrlActionEnum.Flights, payload: this.employeeFlightsModel.allFlights[0] };
+
+    this.changeDetector.detectChanges();
+  }
+
+  userSelectedActionHandler(userSelectedInfoActionEvent: IUserSelectedInfoAction) {
+
+    if (userSelectedInfoActionEvent.cntrl === CntrlActionEnum.Employee) {
+
+      const flights: EmployeeFlightsJoinListModel =
+        // tslint:disable-next-line: no-string-literal
+        this.employeeFlightsModel.employeeFlightsList.find((emp) => emp.employeeKey === userSelectedInfoActionEvent.payload['id']);
+
+      this.userSelectedInfoAction = { cntrl: CntrlActionEnum.Employee, payload: flights.employeeFlights.flights as Array<FlightViewModel> };
+
+    } else {
+
+      this.userSelectedInfoAction = { cntrl: CntrlActionEnum.Flights, payload: userSelectedInfoActionEvent.payload };
+
+    }
+
+
+  }
 
   pullFlights() {
 
@@ -43,19 +76,20 @@ export class FlightsDashboardContainerComponent implements OnInit, AfterViewInit
       this.getViewModel$();
     });
 
-  };
+  }
 
   getViewModel$() {
-
 
     this.getFlightsService.getDashboardFlights().subscribe((data: EmployeeFlightsContainer) => {
 
       this.employeeFlightsModel = { ...data } as EmployeeFlightsContainer;
 
+      this.setDefaultInfo();
+
       this.changeDetector.detectChanges();
 
     });
 
-  };
+  }
 
 }

@@ -1,16 +1,57 @@
-<section>
-    <div class="title" [style.visibility]="titleVisibility">
-        WORKERS
-    </div>
-    <mat-selection-list [multiple]="false">
+<div class="title" [style.visibility]="titleVisibility">
+    WORKERS
+</div>
 
-        <mat-list-option (click)="employeeSelected(employee)" *ngFor="let employee of employeeFlightsModel?.allEmloyees" [value]="employee">
-            <!-- <mat-list-option *ngFor="let employee of employeeFlightsModel?.employeeFlightsList" [value]="employee"> -->
-            <!-- <mat-list-option *ngFor="let employee of employeeFlightsModel?.employeeFlightsList | keyvalue" [value]="employee"> -->
-            <!-- <mat-list-option *ngFor="let employee of employeeFlightsModel?.vm" [value]="employee"> -->
-            <!-- {{employee?.employeeFlights.employeeName}} -->
+<!-- DEFAULT EMPLOYEES COLUMN -->
+<ng-container *ngIf="cntrl==='[Default]';else selectedTmp">
+
+    <mat-selection-list [multiple]="false" *ngFor="let employee of employeeFlightsModel?.allEmloyees">
+
+        <mat-list-option (click)="selected(employee)" [value]="employee">
             {{employee.name}}
         </mat-list-option>
 
     </mat-selection-list>
-</section>
+
+</ng-container>
+
+
+<!-- SELECTED EMPLOYEE COLUMN -->
+<ng-template #selectedTmp>
+
+    <ng-container *ngIf="cntrl==='[Employee]';else flightsTmp">
+
+        <mat-selection-list [multiple]="false" *ngFor="let employee of userSelectedInfoAction">
+
+            <ng-container *ngFor="let eData of employee.payload">
+                <mat-list-item> Plane Number: {{eData.num}} </mat-list-item>
+
+                <mat-list-item> Duration: {{eData.duration}} </mat-list-item>
+
+                <mat-list-item> Origin Gate {{eData.from_gate}} </mat-list-item>
+
+                <mat-list-item> Destination Gate {{eData.to_gate}} </mat-list-item>
+                <hr />
+            </ng-container>
+
+        </mat-selection-list>
+
+    </ng-container>
+
+</ng-template>
+
+<ng-template #flightsTmp>
+
+    <!-- SELECTED EMPLOYESS-FLIGHT COLUMN -->
+    <mat-list *ngFor="let flight of userSelectedInfoAction">
+
+        <mat-list-item> Plane Number: {{flight.payload.num}} </mat-list-item>
+
+        <mat-list-item> Duration: {{flight.payload.duration}} </mat-list-item>
+
+        <mat-list-item> Origin Gate {{flight.payload.from_gate}} </mat-list-item>
+
+        <mat-list-item> Destination Gate {{flight.payload.to_gate}} </mat-list-item>
+
+    </mat-list>
+</ng-template>

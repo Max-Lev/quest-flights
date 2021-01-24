@@ -1,8 +1,9 @@
-<app-employees-container (userSelectedInfo)="userSelectedActionHandler($event)"
+<app-employees-container cntrl="[Default]" (userSelectedInfo)="userSelectedActionHandler($event)"
     [employeeFlightsModel]="employeeFlightsModel"></app-employees-container>
 
 <app-flights-info-container (userSelectedInfo)="userSelectedActionHandler($event)"
     [employeeFlightsModel]="employeeFlightsModel"></app-flights-info-container>
 
-<app-employees-container [titleVisibility]="'hidden'"></app-employees-container>
-<!-- [selectedData]="selectedData" -->
+
+<app-employees-container [cntrl]="userSelectedInfoAction.cntrl" [userSelectedInfoAction]="[userSelectedInfoAction]"
+    [titleVisibility]="'hidden'"></app-employees-container>

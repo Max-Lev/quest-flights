@@ -8,13 +8,11 @@ import { MatListModule } from '@angular/material/list';
   declarations: [EmployeesContainerComponent],
   imports: [
     CommonModule,
-    MatListModule,
-    // MatListOption
+    MatListModule
   ],
   exports: [
     EmployeesContainerComponent,
-    MatListModule,
-    // MatListOption
+    MatListModule
   ]
 })
 export class EmployeesModule { }

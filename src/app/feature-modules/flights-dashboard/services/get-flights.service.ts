@@ -4,19 +4,20 @@ import { forkJoin, interval, Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { combineAll, flatMap, mergeMap, switchMap, timeInterval, toArray } from 'rxjs/internal/operators';
 import { from } from 'rxjs/internal/observable/from';
-import { EmployeeFlightsContainer, IEmployeeResponseModel, IFlightResponseModel } from '../models/employee-flights-container.model';
+import { EmployeeFlightsContainer } from '../models/employee-flights-container.model';
 import { Subject } from 'rxjs/internal/Subject';
+import { EmployeeResponseModel, IFlightResponseModel } from '../models/employees-flights-response.model';
 
 @Injectable()
 export class GetFlightsService {
 
   constructor(private httpClient: HttpClient) { };
 
-  employeesList: IEmployeeResponseModel[] = [];
+  employeesList: EmployeeResponseModel[] = [];
 
   employeeFlightsContainer: EmployeeFlightsContainer = new EmployeeFlightsContainer([]);
 
-  private employeesCache: IEmployeeResponseModel[] = [];
+  private employeesCache: EmployeeResponseModel[] = [];
 
   getDashboardFlights(): Observable<EmployeeFlightsContainer> {
 
@@ -28,7 +29,7 @@ export class GetFlightsService {
 
       mergeMap(employees$ => from(employees$)),
 
-      mergeMap((employee$: IEmployeeResponseModel) =>
+      mergeMap((employee$: EmployeeResponseModel) =>
 
         forkJoin(
           [
@@ -38,7 +39,7 @@ export class GetFlightsService {
         ))
       // .pipe((employee_flights_join: Observable<[IEmployeeResponseModel, IFlightResponseModel[]]>) => employee_flights_join))
 
-    ).pipe(toArray()).subscribe((employee_flights_join_response$: [IEmployeeResponseModel, IFlightResponseModel[]][]) => {
+    ).pipe(toArray()).subscribe((employee_flights_join_response$: [EmployeeResponseModel, IFlightResponseModel[]][]) => {
 
       this.employeeFlightsContainer = new EmployeeFlightsContainer(employee_flights_join_response$);
 
@@ -54,7 +55,7 @@ export class GetFlightsService {
 
   };
 
-  private setEmployeesListCache(employee_flights_join_response$: [IEmployeeResponseModel, IFlightResponseModel[]][]) {
+  private setEmployeesListCache(employee_flights_join_response$: [EmployeeResponseModel, IFlightResponseModel[]][]) {
 
     employee_flights_join_response$.map(item => {
 
@@ -72,17 +73,17 @@ export class GetFlightsService {
 
   }
 
-  private getEmployees(): Observable<IEmployeeResponseModel[]> {
+  private getEmployees(): Observable<EmployeeResponseModel[]> {
 
     if (this.employeeFlightsContainer.allEmloyees.length) {
       return of(this.employeeFlightsContainer.allEmloyees);
     } else {
-      return this.httpClient.get<IEmployeeResponseModel[]>(environment.workers);
+      return this.httpClient.get<EmployeeResponseModel[]>(environment.workers);
     }
 
   };
 
-  private getEmployeeFlights(employeesResponse: IEmployeeResponseModel): Observable<IFlightResponseModel[]> {
+  private getEmployeeFlights(employeesResponse: EmployeeResponseModel): Observable<IFlightResponseModel[]> {
 
     return this.httpClient.get(`${environment.workers}${employeesResponse.id}`) as Observable<IFlightResponseModel[]>;
 

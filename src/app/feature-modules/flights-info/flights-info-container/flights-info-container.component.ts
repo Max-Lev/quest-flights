@@ -1,8 +1,10 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
-import { EmployeeFlightsContainer, FlightViewModel } from '../../flights-dashboard/models/employee-flights-container.model';
-import { UserSelectedInfoAction } from '../../flights-dashboard/models/user-selected-info.action';
+import { EmployeeFlightsContainer } from '../../flights-dashboard/models/employee-flights-container.model';
+import { IUserSelectedInfoAction } from '../../flights-dashboard/models/user-selected-info.action';
 import { MatTable, MatTableModule } from '@angular/material/table';
+import { FlightViewModel } from '../../flights-dashboard/models/employees-flights-response.model';
+import { CntrlActionEnum } from '../../flights-dashboard/models/cntrl-action.enum';
 export interface TableViewModel {
   origin: string;
   originDate: string;
@@ -22,7 +24,7 @@ export class FlightsInfoContainerComponent implements OnInit, OnChanges, AfterVi
 
   selectedData = [];
 
-  @Output() userSelectedInfo: EventEmitter<UserSelectedInfoAction> = new EventEmitter();
+  @Output() userSelectedInfo: EventEmitter<IUserSelectedInfoAction> = new EventEmitter();
 
   selectedRowIndex: FlightViewModel;
 
@@ -34,17 +36,15 @@ export class FlightsInfoContainerComponent implements OnInit, OnChanges, AfterVi
 
   ngOnInit(): void {
 
-  }
+  };
 
   ngOnChanges(changes: SimpleChanges): void {
 
-  }
+  };
 
   ngAfterViewInit(): void {
-    setTimeout(() => {
-      console.log(this.table)
-    }, 1000);
-  }
+
+  };
 
   flightSelected(flight: FlightViewModel, rIndex: number) {
 
@@ -52,9 +52,9 @@ export class FlightsInfoContainerComponent implements OnInit, OnChanges, AfterVi
 
     flight.isSelected = true;
 
-    this.userSelectedInfo.emit({ cntrl: '[Flights]', payload: flight });
+    this.userSelectedInfo.emit({ cntrl: CntrlActionEnum.Flights, payload: flight });
 
-  }
+  };
 
 
 }

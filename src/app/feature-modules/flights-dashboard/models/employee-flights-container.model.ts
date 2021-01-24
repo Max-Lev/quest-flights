@@ -1,59 +1,10 @@
-export interface IEmployeeResponseModel {
-    name: string;
-    id: number;
-};
-
-export interface IFlightResponseModel {
-    duration: number;
-    from: string;
-    from_date: string;
-    from_gate: number;
-    num: string;
-    plane: string;
-    to: string;
-    to_date: string;
-    to_gate: number;
-};
-
-export class FlightViewModel implements IFlightResponseModel {
-    duration: number;
-    from: string;
-    from_date: string;
-    from_gate: number;
-    num: string;
-    plane: string;
-    to: string;
-    to_date: string;
-    to_gate: number;
-    'Flight Number': string;
-    'Origin': string;
-    'Origin Date': string;
-    'Destination': string;
-    'Destination Date': string;
-    isSelected: boolean;
-    constructor(model: IFlightResponseModel) {
-        Object.assign(this, model);
-        this.isSelected = false;
-        this['Flight Number'] = model.num;
-        this['Origin'] = model.from;
-        this['Origin Date'] = model.from_date;
-        this['Destination'] = model.to;
-        this['Destination Date'] = model.to_date;
-    }
-};
+import { FlightViewModel, EmployeeResponseModel, IFlightResponseModel } from './employees-flights-response.model';
 
 
-export class EmployeeFlightsResponseModel$ {
-
-    employeesList: IEmployeeResponseModel;
-
-    flightList: IFlightResponseModel[] = [];
-
-};
 
 export class EmployeeFlights {
     employeeName: string;
-    flights: FlightViewModel[];
+    flights: FlightViewModel[] = [];
     constructor(model: EmployeeFlights) {
         this.employeeName = model.employeeName;
         this.flights = model.flights;
@@ -71,15 +22,15 @@ export class EmployeeFlightsJoinListModel {
 
 export class EmployeeFlightsContainer {
 
-    allEmloyees: IEmployeeResponseModel[] = [];
+    allEmloyees: EmployeeResponseModel[] = [];
 
     employeeFlightsList: EmployeeFlightsJoinListModel[] = [];
 
     allFlights: FlightViewModel[] = [];
 
-    constructor(info: [IEmployeeResponseModel, IFlightResponseModel[]][]) {
+    constructor(info: [EmployeeResponseModel, IFlightResponseModel[]][]) {
 
-        info.map((item: [IEmployeeResponseModel, IFlightResponseModel[]], index: number) => {
+        info.map((item: [EmployeeResponseModel, IFlightResponseModel[]], index: number) => {
 
             this.employeeFlightsList.push
                 (
@@ -97,7 +48,7 @@ export class EmployeeFlightsContainer {
         });
     };
 
-    private setAllFlights(item: [IEmployeeResponseModel, IFlightResponseModel[]]) {
+    private setAllFlights(item: [EmployeeResponseModel, IFlightResponseModel[]]) {
         item[1].map(flight => this.allFlights.push(new FlightViewModel(flight)));
     };
 

@@ -36,6 +36,6 @@ const routes: Routes = [
 })
 export class FlightsDashboardModule {
   constructor() {
-    console.log(environment)
+
   }
 }
